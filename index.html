@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fish Bowl — Endless Swim</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>Fish Bowl</h1>
+    <p>Watch the fish swim endless laps. Laps completed: <span id="lapCount">0</span></p>
+  </header>
+
+  <main class="layout">
+    <section class="stage-card">
+      <!-- SVG Bowl Stage -->
+      <svg id="bowl" viewBox="0 0 600 500" role="img" aria-label="Animated fish swimming in a glass bowl">
+        <!-- Background gradient -->
+        <defs>
+          <radialGradient id="waterGrad" cx="50%" cy="35%" r="70%">
+            <stop offset="0%" stop-color="#b9ecff" stop-opacity="0.9" />
+            <stop offset="100%" stop-color="#7bd3ff" stop-opacity="0.9" />
+          </radialGradient>
+          <radialGradient id="glassShine" cx="40%" cy="5%" r="70%">
+            <stop offset="0%" stop-color="white" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="6" />
+            <feOffset dx="0" dy="2" result="offsetblur"/>
+            <feMerge>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Bowl -->
+        <g id="bowlGroup" filter="url(#softShadow)">
+          <ellipse cx="300" cy="290" rx="240" ry="160" fill="url(#waterGrad)" />
+          <!-- Glass highlights -->
+          <ellipse cx="240" cy="160" rx="80" ry="40" fill="url(#glassShine)" />
+          <ellipse cx="360" cy="145" rx="40" ry="18" fill="url(#glassShine)" />
+          <!-- Bowl rim -->
+          <ellipse cx="300" cy="160" rx="260" ry="60" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="10" />
+          <!-- Bowl base shadow -->
+          <ellipse cx="300" cy="450" rx="150" ry="25" fill="rgba(0,0,0,.14)" />
+        </g>
+
+        <!-- Bubbles (CSS animates) -->
+        <g id="bubbles">
+          <circle class="bubble" cx="220" cy="380" r="6" />
+          <circle class="bubble" cx="260" cy="400" r="4" />
+          <circle class="bubble" cx="340" cy="390" r="5" />
+          <circle class="bubble" cx="380" cy="410" r="3" />
+        </g>
+
+        <!-- Fish path is a circle parameterized in JS (visual aid dashed) -->
+        <circle id="swimPath" cx="300" cy="290" r="135" fill="none" stroke="rgba(255,255,255,.25)" stroke-dasharray="6 8" />
+
+        <!-- Fish Group (positioned via JS) -->
+        <g id="fishGroup" transform="translate(435,290)">
+          <!-- Tail -->
+          <polygon id="fishTail" points="-20,0 -50,-14 -50,14" />
+          <!-- Body -->
+          <ellipse id="fishBody" cx="0" cy="0" rx="40" ry="22" />
+          <!-- Fin -->
+          <path id="fishFin" d="M-5,0 Q-10,-16 -20,-6 Q-10,0 -5,0 Z" />
+          <!-- Eye -->
+          <circle id="fishEye" cx="18" cy="-4" r="4" />
+          <circle id="fishPupil" cx="19" cy="-4" r="2.2" />
+          <!-- Sparkle -->
+          <circle id="eyeSparkle" cx="19.8" cy="-4.8" r="0.8" />
+        </g>
+      </svg>
+
+      <div class="hud">
+        <button id="playPause" class="btn" aria-pressed="true">Pause</button>
+        <label class="sliderLabel" for="speed">
+          Speed
+          <input type="range" id="speed" min="0.1" max="3" value="1" step="0.1" />
+          <span id="speedVal">1.0x</span>
+        </label>
+        <button id="reset" class="btn btn-secondary">Reset</button>
+      </div>
+    </section>
+
+    <aside class="info-card">
+      <h2>How it works</h2>
+      <ul>
+        <li>The fish swims around an invisible circular path inside the bowl.</li>
+        <li>Each full revolution increments the lap counter at the top.</li>
+        <li>Use the controls to pause, change speed, or reset.</li>
+        <li>Try hovering or clicking the fish for a little bounce!</li>
+      </ul>
+      <p class="smallprint">Pro tip: This demo uses <code>requestAnimationFrame</code>, an SVG scene, and a bit of trigonometry to keep things smooth and accurate.</p>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <p>Made with ♡ &nbsp;—&nbsp; Enjoy the swim!</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
